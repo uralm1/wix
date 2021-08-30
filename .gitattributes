@@ -1,0 +1,11 @@
+*.msi binary
+*.wixpdb binary
+*.png binary
+*.jpg binary
+*.ico binary
+*.exe binary
+*.dll binary
+*.zip binary
+*.tar.gz binary
+*.ttf binary
+*.pdf binary

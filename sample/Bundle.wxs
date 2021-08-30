@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<?include product.wxi ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+  xmlns:bal="http://schemas.microsoft.com/wix/BalExtension"
+	xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+	
+  <Bundle Name="$(var.ProductName)" Manufacturer="$(var.ProductManufacturer)"
+	  Version="$(var.ProductVersion)"
+	  UpgradeCode="FC5CE382-26FA-454E-9A7D-BF1BCC4630F2"
+		DisableModify="yes">
+		
+	  <!--BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense"-->
+	  <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.HyperlinkLicense">
+		  <!--bal:WixStandardBootstrapperApplication LicenseFile="license.rtf" SuppressOptionsUI="yes" /-->
+		  <bal:WixStandardBootstrapperApplication LicenseUrl="" SuppressOptionsUI="yes" ShowVersion="yes" />
+	  </BootstrapperApplicationRef>
+		
+		<Chain>
+
+		  <!--MsiPackage Id="MainPackage" SourceFile="SampleFirst.msi" Visible="yes" Vital="yes" Cache="no" /-->
+		  <MsiPackage Id="MainPackage" SourceFile="SampleFirst.msi" Vital="yes" Cache="no" />
+			
+		</Chain>
+	</Bundle>
+</Wix>

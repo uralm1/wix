@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<?include product.wxi ?>
+
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <Product Name="$(var.ProductName)" Manufacturer="$(var.ProductManufacturer)"
+    Id="$(var.ProductId)"
+	  UpgradeCode='1D3430C0-7339-4A11-8E8A-B1B61D565C8F'
+    Language='1049' Codepage='1251' Version="$(var.ProductVersion)">
+
+    <Package Id='*' Keywords='Installer' Description="Acme's Foobar 1.0 Installer"
+      Comments='Foobar is a registered trademark of Acme Ltd.' Manufacturer="$(var.ProductManufacturer)"
+      InstallerVersion='300' Languages='1049' Compressed='yes' SummaryCodepage='1251'
+			InstallScope="perMachine" />
+
+    <Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
+    <Property Id='DiskPrompt' Value="Acme's Foobar 1.0 Installation [1]" />
+
+    <MajorUpgrade AllowDowngrades="no"
+		  AllowSameVersionUpgrades="no"
+			DowngradeErrorMessage="Более новая версия [ProductName] уже установлена. Обновление невозможно."
+		  Schedule="afterInstallInitialize" />
+		
+    <Condition Message="You need to be an administrator to install this product.">
+	    Privileged
+	  </Condition>
+	
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id='ProgramFilesFolder' Name='PFiles'>
+        <Directory Id='Acme' Name='Acme'>
+          <Directory Id='INSTALLDIR' Name='Foobar 1.0'>
+
+            <Component Id='MainExecutable' Guid='4844C9B6-7E01-4387-A734-BFCBDB1A6FB7'>
+              <File Id='FoobarEXE' Name='FoobarAppl10.exe' DiskId='1' Source='files\FoobarAppl10.exe' KeyPath='yes'>
+                <Shortcut Id="startmenuFoobar10" Directory="ProgramMenuDir" Name="Foobar 1.0" WorkingDirectory='INSTALLDIR' Icon="Foobar10.exe" IconIndex="0" Advertise="yes" />
+                <Shortcut Id="desktopFoobar10" Directory="DesktopFolder" Name="Foobar 1.0" WorkingDirectory='INSTALLDIR' Icon="Foobar10.exe" IconIndex="0" Advertise="yes" />
+              </File>
+              <File Id='ConfigININEW' Name='config.ini.new' DiskId='1' Source='files\config.ini' />
+            </Component>
+
+            <Component Id='HelperLibrary' Guid='FD18A726-44A8-4911-A062-A517C1B7A01A'>
+              <File Id='HelperDLL' Name='Helper1.dll' DiskId='1' Source='files\Helper1.dll' KeyPath='yes' />
+            </Component>
+
+            <Component Id='Manual' Guid='2FFF72C3-0C66-4EDB-AD3C-B9157348BD76'>
+              <File Id='Manual' Name='Manual.pdf' DiskId='1' Source='files\Manual.pdf' KeyPath='yes'>
+                <Shortcut Id="startmenuManual" Directory="ProgramMenuDir" Name="Instruction Manual" Advertise="yes" />
+              </File>
+            </Component>
+
+            <Component Id='ConfigFile' Guid='588F5E6C-830F-4F4B-9EBF-B1EC0FC0DB38'>
+              <File Id='ConfigINI' Name='config.ini' DiskId='1' Source='files\config.ini' KeyPath='yes' />
+            </Component>
+						
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder" Name="Programs">
+        <Directory Id="ProgramMenuDir" Name="Foobar 1.0">
+          <Component Id="ProgramMenuDir" Guid="9E7A02CA-3F18-4C5D-8B0F-CE7F41B85CA9">
+            <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
+            <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Type='string' Value='' KeyPath='yes' />
+          </Component>
+        </Directory>
+      </Directory>
+
+      <Directory Id="DesktopFolder" Name="Desktop" />
+    </Directory>
+
+    <Feature Id='Complete' Level='1'>
+      <ComponentRef Id='MainExecutable' />
+      <ComponentRef Id='HelperLibrary' />
+      <ComponentRef Id='Manual' />
+      <ComponentRef Id='ConfigFile' />
+      <ComponentRef Id='ProgramMenuDir' />
+    </Feature>
+
+    <Icon Id="Foobar10.exe" SourceFile="files\FoobarAppl10.exe" />
+
+  </Product>
+</Wix>

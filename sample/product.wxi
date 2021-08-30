@@ -1,0 +1,8 @@
+<Include>
+
+<?define ProductName = "Foobar 1.0" ?>
+<?define ProductManufacturer = "Acme Ltd." ?>
+<?define ProductVersion = "1.1.0" ?>
+<?define ProductId = "8A884386-A6B6-481A-A4DA-B088442A5211" ?>
+
+</Include>

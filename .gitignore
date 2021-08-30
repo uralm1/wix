@@ -1,0 +1,7 @@
+*.msi
+*.wixobj
+*.wixpdb
+*.exe
+/iconsext.exe
+/iconsext.cfg
+/wix311.exe
