@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<?include product.wxi ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+  xmlns:bal="http://schemas.microsoft.com/wix/BalExtension"
+	xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+	
+  <Bundle Name="$(var.ProductName)"
+	  Version="$(var.ProductVersion)"
+	  Manufacturer="$(var.ProductManufacturer)"
+	  UpgradeCode="17B1451B-600A-40D8-B137-40CA0EB363DD"
+		DisableModify="yes">
+		
+	  <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.HyperlinkLicense">
+		  <bal:WixStandardBootstrapperApplication LicenseUrl="" SuppressOptionsUI="yes" />
+	  </BootstrapperApplicationRef>
+		
+		<Chain>
+		  <MsiPackage Id="Dep1" SourceFile="files/soft/msoledbsql_18.2.2.0_x86.msi" Visible="yes" Cache="no" Permanent="yes"
+			  InstallCondition="NOT VersionNT64">
+				<MsiProperty Name="IACCEPTMSOLEDBSQLLICENSETERMS" Value="YES" />
+			</MsiPackage>
+
+		  <MsiPackage Id="Dep1_64" SourceFile="files/soft/msoledbsql_18.2.2.0_x64.msi" Visible="yes" Cache="no" Permanent="yes"
+			  InstallCondition="VersionNT64">
+				<MsiProperty Name="IACCEPTMSOLEDBSQLLICENSETERMS" Value="YES" />
+			</MsiPackage>
+
+		  <MsiPackage Id="Dep2" SourceFile="files/soft/sqlncli_x86_ru.msi" Visible="yes" Cache="no" Permanent="yes"
+			  InstallCondition="NOT VersionNT64">
+				<MsiProperty Name="IACCEPTSQLNCLILICENSETERMS" Value="YES" />
+			</MsiPackage>
+				
+		  <MsiPackage Id="Dep2_64" SourceFile="files/soft/sqlncli_x64_ru.msi" Visible="yes" Cache="no" Permanent="yes"
+			  InstallCondition="VersionNT64">
+				<MsiProperty Name="IACCEPTSQLNCLILICENSETERMS" Value="YES" />
+			</MsiPackage>
+			
+			<RollbackBoundary />
+			
+		  <MsiPackage Id="MainPackage" SourceFile="rkc-ap-x86.msi" Vital="yes" Cache="no" />
+			
+		</Chain>
+	</Bundle>
+</Wix>

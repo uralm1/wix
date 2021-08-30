@@ -1,0 +1,9 @@
+<Include>
+
+<?define ProductName = "АРМ Поставщик" ?>
+<?define ProductManufacturer = "РКЦ" ?>
+<?define ProductVersion = "1.5.1" ?>
+<?define ProductId = "A65083D5-7A77-4A38-954F-6DC0232FFD3D" ?>
+<?define ProductBuildDate = "210816" ?>
+
+</Include>

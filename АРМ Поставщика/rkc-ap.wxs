@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<?include product.wxi ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <Product Name="$(var.ProductName)"
+    Version="$(var.ProductVersion)"
+    Manufacturer="$(var.ProductManufacturer)"
+    Id="$(var.ProductId)"
+	  UpgradeCode='90001F8E-A742-4929-BC10-2BDEA5629817'
+    Language='1049' Codepage='1251'>
+
+    <Package Id='*'
+	    Keywords='ЕРКЦ'
+	    Description="АРМ Поставщика"
+      Comments="($(var.ProductBuildDate))"
+	    Manufacturer="$(var.ProductManufacturer)"
+      InstallerVersion='300' Languages='1049' SummaryCodepage='1251'
+	    Compressed='yes'
+	    InstallScope="perMachine" />
+
+    <Media Id='1' Cabinet='Data.cab' EmbedCab='yes' DiskPrompt="IMAGE #1" />
+    <Property Id='DiskPrompt' Value="Installation media [1]" />
+
+    <MajorUpgrade AllowDowngrades="no"
+		  AllowSameVersionUpgrades="no"
+			DowngradeErrorMessage="Более новая версия [ProductName] уже установлена. Обновление невозможно."
+		  Schedule="afterInstallInitialize" />
+		
+    <Condition Message="Вам необходимо быть членом группы Администраторы для выполнения установки.">
+	    Privileged
+	  </Condition>
+
+    <!--util:CloseApplication Id="CloseApp" CloseMessage="yes" Target="CountersIPU.exe" TerminateProcess="1" RebootPrompt="no" /-->
+	
+    <Property Id='ARPPRODUCTICON'>icon.ico</Property>
+    <Property Id='ARPNOMODIFY'>1</Property>
+    <Property Id='ARPCOMMENTS'>$(var.ProductBuildDate)</Property>
+    <Property Id='ARPCONTACT'>$(var.ProductManufacturer)</Property>
+	
+	  <SetDirectory Id="INSTALLDIR" Value="[WindowsVolume]АРМ Поставщика" />
+	
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id="INSTALLDIR" FileSource="files">
+
+				<Component Id='MainFiles' Guid='3C525669-BA69-46BD-B6BE-360BD656C0C5'>
+					<CreateFolder>
+						<util:PermissionEx User="Users" GenericRead="yes" GenericWrite="yes" GenericExecute="yes" Delete="yes" />
+					</CreateFolder>
+          <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="Path" Value="[INSTALLDIR]" Type='string' KeyPath="yes" />
+          <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="Version" Value="[ProductVersion]" Type='string' />
+					<File Name="cardsup.exe" Checksum="yes">
+					  <Shortcut Id="startmenu_cardsup.exe" Directory="ProgramMenuAppFolder" Name="АРМ Поставщик" WorkingDirectory='INSTALLDIR' Icon="icon_from_exe.exe" IconIndex="0" />
+					  <Shortcut Id="desktop_cardsup.exe" Directory="DesktopFolder" Name="АРМ Поставщик" WorkingDirectory='INSTALLDIR' Icon="icon_from_exe.exe" IconIndex="0" />
+					</File>
+					<File Name="CardSup.chm" />
+					<File Name="added.dll" />
+					<File Name="AdmExt.dll" />
+					<File Name="BCode.dll" />
+					<File Name="Connect.dll" />
+					<File Name="Counters.dll" />
+					<File Name="GisGkh.dll" />
+					<File Name="ImageLib.dll" />
+					<File Name="ItSimpleForm.dll" />
+					<File Name="Notebook.dll" />
+					<File Name="Payings.dll" />
+					<File Name="Penalty.dll" />
+					<File Name="Preview.dll" />
+					<File Name="PVL.dll" />
+					<File Name="Stuff.dll" />
+					<File Name="subsidy.dll" />
+					<File Name="CardSup.INI.new" Source="files/CardSup.INI">
+					  <util:PermissionEx User="Users" GenericRead="yes" GenericWrite="yes" GenericExecute="yes" Delete="yes" />
+					</File>
+				</Component>
+
+				<Component Id="ConfigFile" Guid='1F95C506-67C6-410F-A048-E979939962A4'>
+					<File Name="CardSup.INI" KeyPath="yes">
+					  <util:PermissionEx User="Users" GenericRead="yes" GenericWrite="yes" GenericExecute="yes" Delete="yes" />
+					</File>
+				</Component>
+				
+        <Directory Id='Instructions' Name='Инструкции'>
+					<Component Id='Manuals' Guid='AAD5F5EA-6B1B-4249-AE55-B3771B8F80F7'>
+						<RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="manuals" Value='1' Type='integer' KeyPath='yes' />
+						<File Id="instr.pdf" Name='Инструкция по настройке АРМ Поставщик.pdf'>
+							<Shortcut Id="startmenu_instr.pdf" Directory="ProgramMenuManualsFolder" Name="Инструкция по настройке АРМ Поставщик" />
+							<Shortcut Id="desktop_instr.pdf" Directory="DesktopManualsFolder" Name="Инструкция по настройке АРМ Поставщик" />
+						</File>
+					</Component>
+        </Directory>
+
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ProgramMenuAppFolder" Name="АРМ Поставщик">
+          <Component Id="ProgramMenuShortcuts" Guid="7DDBBE85-6704-41E1-8A6E-21A3CF669439">
+            <RemoveFolder Id='RemoveProgramMenuAppFolder' On='uninstall' />
+            <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="sh1" Value='1' Type='integer' KeyPath='yes' />
+          </Component>
+          <Directory Id="ProgramMenuManualsFolder" Name="Инструкции">
+						<Component Id="ProgramMenuManualsShortcuts" Guid="6F011CA9-CAAC-47C0-BBDB-AB658E9F31E4">
+							<RemoveFolder Id='RemoveProgramMenuManualsFolder' On='uninstall' />
+              <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="sh2" Value='1' Type='integer' KeyPath='yes' />
+						</Component>
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <Directory Id="DesktopFolder" Name="Desktop">
+        <Directory Id="DesktopManualsFolder" Name="Инструкции АРМ Поставщик">
+          <Component Id="DesktopManualsShortcuts" Guid="4B62437E-DC72-4A41-9E23-C0C3D63EC17F">
+            <RemoveFolder Id='RemoveDesktopManualsFolder' On='uninstall' />
+            <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="sh3" Value='1' Type='integer' KeyPath='yes' />
+          </Component>
+        </Directory>
+      </Directory>
+			
+			<Component Id="MSSQLConnections" Permanent="yes" Guid="C153EA41-E68A-477D-BBC1-8E423147DB33">
+        <RegistryKey Root="HKLM" Key="Software\Microsoft\MSSQLServer\Client">
+          <RegistryValue Name="SharedMemoryOn" Value="1" Type="integer" />
+          <RegistryValue Key="ConnectTo" Name="ufarkc" Value="DBMSSOCN,81.30.196.222,14330" Type="string" KeyPath='yes' />
+          <RegistryValue Key="SuperSocketNetLib" Name="ProtocolOrder" Value="tcp" Type="string" />
+        </RegistryKey>
+			</Component>
+
+			<Component Id="MSSQLConnections64" Permanent="yes" Guid="7CCF5119-AE65-4AB2-BA7A-081B866ABDBA">
+			  <Condition>VersionNT64</Condition>
+        <RegistryKey Root="HKLM" Key="Software\Wow6432Node\Microsoft\MSSQLServer\Client">
+          <RegistryValue Name="SharedMemoryOn" Value="1" Type="integer" />
+          <RegistryValue Key="ConnectTo" Name="ufarkc" Value="DBMSSOCN,81.30.196.222,14330" Type="string" KeyPath='yes' />
+          <RegistryValue Key="SuperSocketNetLib" Name="ProtocolOrder" Value="tcp" Type="string" />
+        </RegistryKey>
+			</Component>
+			
+    </Directory>
+
+    <Property Id="QtExecAddHost">
+<![CDATA["cmd.exe" /c findstr /b /r /c:"^81\.30\.196\.222 *ufarkc" "%WINDIR%\System32\drivers\etc\hosts" || (echo. & echo 81.30.196.222 ufarkc) >> "%WINDIR%\System32\drivers\etc\hosts"]]>
+    </Property>
+    <CustomAction Id="QtExecAddHost" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" />
+    <InstallExecuteSequence>
+		   <Custom Action="QtExecAddHost" Before="InstallFinalize">NOT REMOVE</Custom>
+    </InstallExecuteSequence>
+
+    <!-- Prerequisites: detection -->
+    <Property Id="PREREQ_MSOLEDBSQLX64">
+		  <ProductSearch UpgradeCode="DEBB0805-202C-471D-A182-675FF32F65C2" Minimum="0" />
+    </Property>
+    <Property Id="PREREQ_MSOLEDBSQLX86">
+		  <ProductSearch UpgradeCode="21953B7E-4D69-486C-B65A-FF7B82135532" Minimum="0" />
+    </Property>
+    <Property Id="PREREQ_SQLNCLIX64">
+		  <ProductSearch UpgradeCode="D57692E4-C5D5-4752-A427-B61DD899D911" Minimum="0" />
+    </Property>
+    <Property Id="PREREQ_SQLNCLIX86">
+		  <ProductSearch UpgradeCode="DFFB34A1-9C0A-4956-9CD5-C914858D78D5" Minimum="0" />
+    </Property>
+		
+    <!-- Prerequisites: include files -->
+    <!--DirectoryRef Id="INSTALLDIR">
+			<Directory Id="Prerequisites_dir" Name="soft" FileSource="files/soft">
+				<Component Id="PrerequisitesFiles" Guid="C2D9E44A-A6A4-42A3-83A9-F3CEF601761F">
+  			  <Condition>NOT VersionNT64</Condition>
+					<File Name="msoledbsql_18.2.2.0_x86.msi" />
+					<File Name="sqlncli_x86_ru.msi" />
+				</Component>
+				<Component Id="PrerequisitesFiles64" Guid="82D1A941-4095-4F6C-8D7D-067AE0D3CD81">
+  			  <Condition>VersionNT64</Condition>
+					<File Name="msoledbsql_18.2.2.0_x64.msi" />
+					<File Name="sqlncli_x64_ru.msi" />
+				</Component>
+			</Directory>
+    </DirectoryRef-->
+		
+		
+    <Feature Id='Complete' Level='1'>
+      <ComponentRef Id='MainFiles' />
+      <ComponentRef Id='ConfigFile' />
+      <ComponentRef Id='Manuals' />
+      <ComponentRef Id='ProgramMenuShortcuts' />
+      <ComponentRef Id='ProgramMenuManualsShortcuts' />
+      <ComponentRef Id='DesktopManualsShortcuts' />
+      <ComponentRef Id='MSSQLConnections' />
+      <ComponentRef Id='MSSQLConnections64' />
+      <!--ComponentRef Id='PrerequisitesFiles' />
+      <ComponentRef Id='PrerequisitesFiles64' /-->
+    </Feature>
+
+    <Icon Id="icon_from_exe.exe" SourceFile="files\cardsup.exe" />
+    <Icon Id="icon.ico" SourceFile="cardsup.ico" />
+
+  </Product>
+</Wix>

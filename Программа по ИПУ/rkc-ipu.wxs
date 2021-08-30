@@ -1,0 +1,193 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<?include product.wxi ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <Product Name="$(var.ProductName)"
+    Version="$(var.ProductVersion)"
+    Manufacturer="$(var.ProductManufacturer)"
+    Id="$(var.ProductId)"
+	  UpgradeCode='6E57A731-E328-4585-ADC8-183D1741CD44'
+    Language='1049' Codepage='1251'>
+
+    <Package Id='*'
+	    Keywords='ИПУ;ЕРКЦ'
+	    Description="АРМ по вводу показаний ИПУ"
+      Comments="($(var.ProductBuildDate))"
+	    Manufacturer="$(var.ProductManufacturer)"
+      InstallerVersion='300' Languages='1049' SummaryCodepage='1251'
+	    Compressed='yes'
+	    InstallScope="perMachine" />
+
+    <Media Id='1' Cabinet='Data.cab' EmbedCab='yes' DiskPrompt="IMAGE #1" />
+    <Property Id='DiskPrompt' Value="Installation media [1]" />
+
+    <MajorUpgrade AllowDowngrades="no"
+		  AllowSameVersionUpgrades="no"
+			DowngradeErrorMessage="Более новая версия [ProductName] уже установлена. Обновление невозможно."
+		  Schedule="afterInstallInitialize" />
+		
+    <Condition Message="Вам необходимо быть членом группы Администраторы для выполнения установки.">
+	    Privileged
+	  </Condition>
+
+    <!--util:CloseApplication Id="CloseApp" CloseMessage="yes" Target="CountersIPU.exe" TerminateProcess="1" RebootPrompt="no" /-->
+	
+    <Property Id='ARPPRODUCTICON'>icon.ico</Property>
+    <Property Id='ARPNOMODIFY'>1</Property>
+    <Property Id='ARPCOMMENTS'>$(var.ProductBuildDate)</Property>
+    <Property Id='ARPCONTACT'>$(var.ProductManufacturer)</Property>
+	
+	  <SetDirectory Id="INSTALLDIR" Value="[WindowsVolume]Программа по ИПУ" />
+	
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id='INSTALLDIR' FileSource="files">
+
+				<Component Id='MainFiles' Guid='C6D4AD82-8F5C-4A5B-B5E6-6963CFC2A431'>
+          <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="Path" Value="[INSTALLDIR]" Type='string' KeyPath="yes" />
+          <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="Version" Value="[ProductVersion]" Type='string' />
+					<File Name="CountersIPU.exe" Checksum="yes">
+					  <Shortcut Id="startmenu_CountersIPU.exe" Directory="ProgramMenuAppFolder" Name="Программа по ИПУ" WorkingDirectory='INSTALLDIR' Icon="icon_from_exe.exe" IconIndex="0" />
+					  <Shortcut Id="desktop_CountersIPU.exe" Directory="DesktopFolder" Name="Программа по ИПУ" WorkingDirectory='INSTALLDIR' Icon="icon_from_exe.exe" IconIndex="0" />
+					</File>
+					<File Name="CountersIPU.pdb" />
+					<File Name="CountersIPU.vshost.exe" />
+					<File Name="CountersIPU.vshost.exe.manifest" />
+					<File Name="ExportExcel.dll" />
+					<File Name="itextsharp.dll" />
+					<File Name="itextsharp.xml" />
+					<File Name="LoginClass.dll" />
+
+					<File Name="arial.ttf" />
+					<File Name="arialbd.ttf" />
+					<File Name="arialbi.ttf" />
+					<File Name="ariali.ttf" />
+					<File Name="ARIALN.TTF" />
+					<File Name="ARIALNB.TTF" />
+					<File Name="ARIALNBI.TTF" />
+					<File Name="ARIALNI.TTF" />
+					<File Name="ariblk.ttf" />
+					
+					<File Id="main_sh1" Name="Шаблон импорта сведений о ПУ-11.1.0.4_Сведения о ПУ_91940.xlsx" />
+					<File Id="main_sh2" Name="Шаблон.xlsx" />
+
+					<File Name="config.ini.new" Source="files/config.ini">
+					  <util:PermissionEx User="Users" GenericRead="yes" GenericWrite="yes" GenericExecute="yes" Delete="yes" />
+					</File>
+					<File Name="key.key.new" Source="files/key.key">
+					  <util:PermissionEx User="Users" GenericRead="yes" GenericWrite="yes" GenericExecute="yes" Delete="yes" />
+					</File>
+				</Component>
+
+				<Component Id="ConfigFile" Guid='71540A4A-4C88-48D5-ADFC-FFCF05342DA9'>
+					<File Name="config.ini" KeyPath="yes">
+					  <util:PermissionEx User="Users" GenericRead="yes" GenericWrite="yes" GenericExecute="yes" Delete="yes" />
+					</File>
+				</Component>
+				
+				<Component Id="KeyFile" Guid='D2613744-1548-42E4-B1D9-C5661EC73F21'>
+					<File Name="key.key" KeyPath="yes">
+					  <util:PermissionEx User="Users" GenericRead="yes" GenericWrite="yes" GenericExecute="yes" Delete="yes" />
+					</File>
+				</Component>
+
+				<Component Id='Manuals' Guid='AC48CAD2-FD72-4A94-816F-09831510100F'>
+          <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="manuals" Value='1' Type='integer' KeyPath='yes' />
+					<File Name='ipu_231116.doc'>
+						<Shortcut Id="startmenu_ipu.doc" Directory="ProgramMenuManualsFolder" Name="Инструкция по работе" />
+						<Shortcut Id="desktop_ipu.doc" Directory="DesktopManualsFolder" Name="Инструкция по работе" />
+					</File>
+					<File Name='gis_manual.doc'>
+						<Shortcut Id="startmenu_gis_manual.doc" Directory="ProgramMenuManualsFolder" Name="Работа с ГИС ЖКХ" />
+						<Shortcut Id="desktop_gis_manual.doc" Directory="DesktopManualsFolder" Name="Работа с ГИС ЖКХ" />
+					</File>
+					<File Name='register_231116.doc'>
+						<Shortcut Id="startmenu_register.doc" Directory="ProgramMenuManualsFolder" Name="Регистрация программы" />
+						<Shortcut Id="desktop_register.doc" Directory="DesktopManualsFolder" Name="Регистрация программы" />
+					</File>
+					<File Name='reglament_231116.doc'>
+						<Shortcut Id="startmenu_reglament.doc" Directory="ProgramMenuManualsFolder" Name="Регламенты работ" />
+						<Shortcut Id="desktop_reglament.doc" Directory="DesktopManualsFolder" Name="Регламенты работ" />
+					</File>
+				</Component>
+			
+        <Directory Id='gis_templates' Name='gis_templates'>
+					<Component Id='GisTemplatesFiles' Guid='C4EF9808-CA87-4501-8EDB-96FD62A646E8'>
+						<File Id="_gis_manual.doc" Name="gis_manual.doc" />
+						<File Id="sh1" Name='Шаблон импорта ЛС-10.0.0.2.xlsx' />
+						<File Id="sh2" Name='Шаблон импорта ЛС-11.0.0.1.xlsx' />
+						<File Id="sh3" Name='Шаблон импорта ЛС-11.1.0.3.xlsx' />
+						<File Id="sh4" Name='Шаблон импорта показаний ИПУ-9.0.0.2.xlsx' />
+						<File Id="sh5" Name='Шаблон импорта показаний ИПУ-11.0.0.1.xlsx' />
+						<File Id="sh6" Name='Шаблон импорта показаний ИПУ-11.13.0.1.xlsx' />
+						<File Id="sh7" Name='Шаблон импорта сведений о ПУ-10.0.0.3.xlsx' />
+						<File Id="sh8" Name='Шаблон импорта сведений о ПУ-11.0.0.1.xlsx' />
+						<File Id="sh9" Name='Шаблон импорта сведений о ПУ-11.1.0.4.xlsx' />
+						<File Id="sh10" Name='Шаблон импорта сведений о ПУ-11.7.0.4.xlsx' />
+						<File Id="sh11" Name='Шаблон импорта сведений о ПУ-11.13.0.10.xlsx' />
+					</Component>
+        </Directory>
+		
+        <Directory Id='results' Name='Результаты'>
+					<Component Id='ResultsFiles' Guid='35296C06-E4A6-472B-8E70-34197CE3921D'>
+					  <CreateFolder>
+  					  <util:PermissionEx User="Users" GenericRead="yes" GenericWrite="yes" GenericExecute="yes" Delete="yes" />
+						</CreateFolder>
+						<File Id='shit.xlsx' Name='Объемы_Прописано от 3 и более, расход = 1м3_17.06.2021_11_43_3_.xlsx.xlsx' />
+					</Component>
+        </Directory>
+
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ProgramMenuAppFolder" Name="Программа по ИПУ">
+          <Component Id="ProgramMenuShortcuts" Guid="6159D10C-5772-4E99-A5C4-1942FEE1021C">
+            <RemoveFolder Id='RemoveProgramMenuAppFolder' On='uninstall' />
+            <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="sh1" Value='1' Type='integer' KeyPath='yes' />
+          </Component>
+          <Directory Id="ProgramMenuManualsFolder" Name="Инструкции">
+						<Component Id="ProgramMenuManualsShortcuts" Guid="360A247C-1D38-4D86-ADD6-7B71B69A6CE0">
+							<RemoveFolder Id='RemoveProgramMenuManualsFolder' On='uninstall' />
+              <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="sh2" Value='1' Type='integer' KeyPath='yes' />
+						</Component>
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <Directory Id="DesktopFolder" Name="Desktop">
+        <Directory Id="DesktopManualsFolder" Name="Инструкции к программе по вводу ИПУ">
+          <Component Id="DesktopManualsShortcuts" Guid="98F2DD57-A103-45AD-BF91-380D929A72F2">
+            <RemoveFolder Id='RemoveDesktopManualsFolder' On='uninstall' />
+            <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="sh3" Value='1' Type='integer' KeyPath='yes' />
+          </Component>
+        </Directory>
+      </Directory>
+			
+    </Directory>
+
+    <Property Id="QtExecAddHost">
+<![CDATA["cmd.exe" /c findstr /b /r /c:"^81\.30\.196\.222 *Morfeuz" "%WINDIR%\System32\drivers\etc\hosts" || (echo. & echo 81.30.196.222 Morfeuz) >> "%WINDIR%\System32\drivers\etc\hosts"]]>
+    </Property>
+    <CustomAction Id="QtExecAddHost" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" />
+    <InstallExecuteSequence>
+		   <Custom Action="QtExecAddHost" Before="InstallFinalize">NOT REMOVE</Custom>
+    </InstallExecuteSequence>
+
+    <Feature Id='Complete' Level='1'>
+      <ComponentRef Id='MainFiles' />
+      <ComponentRef Id='ConfigFile' />
+      <ComponentRef Id='KeyFile' />
+      <ComponentRef Id='Manuals' />
+      <ComponentRef Id='GisTemplatesFiles' />
+      <ComponentRef Id='ResultsFiles' />
+      <ComponentRef Id='ProgramMenuShortcuts' />
+      <ComponentRef Id='ProgramMenuManualsShortcuts' />
+      <ComponentRef Id='DesktopManualsShortcuts' />
+    </Feature>
+
+    <Icon Id="icon_from_exe.exe" SourceFile="files\CountersIPU.exe" />
+    <Icon Id="icon.ico" SourceFile="ipu.ico" />
+
+  </Product>
+</Wix>

@@ -1,0 +1,9 @@
+<Include>
+
+<?define ProductName = "Программа по ИПУ" ?>
+<?define ProductManufacturer = "РКЦ" ?>
+<?define ProductVersion = "1.0.2" ?>
+<?define ProductId = "BA61A177-0284-4005-B50C-15E43F45078E" ?>
+<?define ProductBuildDate = "210825" ?>
+
+</Include>

@@ -1,0 +1,9 @@
+<Include>
+
+<?define ProductName = "Печать отчетов УВК" ?>
+<?define ProductManufacturer = "РКЦ" ?>
+<?define ProductVersion = "1.2.1" ?>
+<?define ProductId = "F3FACC55-1299-47C5-B03A-D43B2F4806AE" ?>
+<?define ProductBuildDate = "210816" ?>
+
+</Include>

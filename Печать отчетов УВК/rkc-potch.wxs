@@ -1,0 +1,231 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<?include product.wxi ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <Product Name="$(var.ProductName)"
+    Version="$(var.ProductVersion)"
+    Manufacturer="$(var.ProductManufacturer)"
+    Id="$(var.ProductId)"
+	  UpgradeCode='D22CDAAE-7FF4-44D9-9C4F-5E98B8CE9A1D'
+    Language='1049' Codepage='1251'>
+
+    <Package Id='*'
+	    Keywords='ЕРКЦ'
+	    Description="Печать отчетов УВК"
+      Comments="($(var.ProductBuildDate))"
+	    Manufacturer="$(var.ProductManufacturer)"
+      InstallerVersion='300' Languages='1049' SummaryCodepage='1251'
+	    Compressed='yes'
+	    InstallScope="perMachine" />
+
+    <Media Id='1' Cabinet='Data.cab' EmbedCab='yes' DiskPrompt="IMAGE #1" />
+    <Property Id='DiskPrompt' Value="Installation media [1]" />
+
+    <MajorUpgrade AllowDowngrades="no"
+		  AllowSameVersionUpgrades="no"
+			DowngradeErrorMessage="Более новая версия [ProductName] уже установлена. Обновление невозможно."
+		  Schedule="afterInstallInitialize" />
+		
+    <Condition Message="Вам необходимо быть членом группы Администраторы для выполнения установки.">
+	    Privileged
+	  </Condition>
+
+    <!--util:CloseApplication Id="CloseApp" CloseMessage="yes" Target="CountersIPU.exe" TerminateProcess="1" RebootPrompt="no" /-->
+	
+    <Property Id='ARPPRODUCTICON'>icon.ico</Property>
+    <Property Id='ARPNOMODIFY'>1</Property>
+    <Property Id='ARPCOMMENTS'>$(var.ProductBuildDate)</Property>
+    <Property Id='ARPCONTACT'>$(var.ProductManufacturer)</Property>
+	
+	  <SetDirectory Id="INSTALLDIR" Value="[WindowsVolume]Печать отчетов УВК" />
+	
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id="INSTALLDIR" FileSource="files">
+
+				<Component Id='MainFiles' Guid='A8C9363E-F40F-437C-9669-76DBC1266C8D'>
+					<CreateFolder>
+						<util:PermissionEx User="Users" GenericRead="yes" GenericWrite="yes" GenericExecute="yes" Delete="yes" />
+					</CreateFolder>
+          <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="Path" Value="[INSTALLDIR]" Type='string' KeyPath="yes" />
+          <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="Version" Value="[ProductVersion]" Type='string' />
+					<File Name="WReport.exe" Checksum="yes">
+						<?if $(sys.BUILDARCH) = x86 ?>
+							<Shortcut Id="startmenu_WReport.exe" Directory="ProgramMenuAppFolder" Name="Печать отчетов УВК" WorkingDirectory='INSTALLDIR' Icon="icon_from_exe.exe" IconIndex="0" />
+							<Shortcut Id="desktop_WReport.exe" Directory="DesktopFolder" Name="Печать отчетов УВК" WorkingDirectory='INSTALLDIR' Icon="icon_from_exe.exe" IconIndex="0" />
+						<?endif ?>
+					</File>
+					<File Name="WReport_x64.exe" Checksum="yes">
+						<?if $(sys.BUILDARCH) = x64 ?>
+  					  <Shortcut Id="startmenu_WReport_x64.exe" Directory="ProgramMenuAppFolder" Name="Печать отчетов УВК" WorkingDirectory='INSTALLDIR' Icon="icon_from_exe.exe" IconIndex="0" />
+	  				  <Shortcut Id="desktop_WReport_x64.exe" Directory="DesktopFolder" Name="Печать отчетов УВК" WorkingDirectory='INSTALLDIR' Icon="icon_from_exe.exe" IconIndex="0" />
+						<?endif ?>
+					</File>
+					<File Name="wreport.chm" />
+					<File Name="AdmExt.dll" />
+					<File Name="Connect.dll" />
+					<File Name="connect_x64.dll" />
+					<File Name="lfreport2.dll" />
+					<File Name="lfreport2_x64.dll" />
+					<File Name="PVL.dll" />
+					<File Name="pvl_x64.dll" />
+					<File Name="Stuff.dll" />
+					<File Name="Stuff_x64.dll" />
+					<File Name="WREPORT.INI.new" Source="files/WREPORT.INI">
+					  <util:PermissionEx User="Users" GenericRead="yes" GenericWrite="yes" GenericExecute="yes" Delete="yes" />
+					</File>
+				</Component>
+
+				<Component Id="ConfigFile" Guid='1026CAA8-BDB5-4307-8C66-BBFB91F83BEB'>
+					<File Name="WREPORT.INI" KeyPath="yes">
+					  <util:PermissionEx User="Users" GenericRead="yes" GenericWrite="yes" GenericExecute="yes" Delete="yes" />
+					</File>
+				</Component>
+				
+        <Directory Id='Instructions' Name='инструкции'>
+					<Component Id='Manuals' Guid='D11AA5EF-B8B8-4C20-A535-8EE0992F5250'>
+						<RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="manuals" Value='1' Type='integer' KeyPath='yes' />
+						<File Id="instr1.pdf" Name='Инструкция по настройке АРМ Печать отчетов.pdf'>
+							<Shortcut Id="startmenu_instr1.pdf" Directory="ProgramMenuManualsFolder" Name="Инструкция по настройке АРМ Печать отчетов" />
+							<Shortcut Id="desktop_instr1.pdf" Directory="DesktopManualsFolder" Name="Инструкция по настройке АРМ Печать отчетов" />
+						</File>
+						<File Id="instr2.pdf" Name='Инструкция по обновлению АРМ Печать отчетов.pdf'>
+							<Shortcut Id="startmenu_instr2.pdf" Directory="ProgramMenuManualsFolder" Name="Инструкция по обновлению АРМ Печать отчетов" />
+							<Shortcut Id="desktop_instr2.pdf" Directory="DesktopManualsFolder" Name="Инструкция по обновлению АРМ Печать отчетов" />
+						</File>
+						<File Id="instr3.pdf" Name='Инструкция по печати из АРМ Печать отчетов.pdf'>
+							<Shortcut Id="startmenu_instr3.pdf" Directory="ProgramMenuManualsFolder" Name="Инструкция по печати из АРМ Печать отчетов" />
+							<Shortcut Id="desktop_instr3.pdf" Directory="DesktopManualsFolder" Name="Инструкция по печати из АРМ Печать отчетов" />
+						</File>
+					</Component>
+        </Directory>
+
+        <Directory Id='result' Name='result'>
+					<Component Id='ResultFolder' Guid='1A6D1B6F-E653-40FE-806B-9F2432195810'>
+					  <CreateFolder>
+  					  <util:PermissionEx User="Users" GenericRead="yes" GenericWrite="yes" GenericExecute="yes" Delete="yes" />
+						</CreateFolder>
+					</Component>
+        </Directory>
+
+        <Directory Id='dir33' Name='33'>
+					<Component Id='dir33Files' Guid='C7E6F9FD-74AD-443E-B2ED-5130F4078D12'>
+						<File Name='cntriUfa.RTM' />
+						<File Name='CNTRLIST.RTM' />
+						<File Name='debtUfa.RTM' />
+						<File Name='saldoUf.rtm' />
+						<File Name='TurnsuUf.rtm' />
+					</Component>
+					
+          <Directory Id='EXCEL' Name='EXCEL'>
+						<Component Id='dir33EXCELFiles' Guid='8AD78A61-7034-436A-81A6-DF196F36B321'>
+							<File Name='cntriUfa.xltx' />
+							<File Name='debtUfa.xltx' />
+							<File Name='saldouf.xltx' />
+							<File Name='turnsuuf.xltx' />
+						</Component>
+          </Directory>
+        </Directory>
+				
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ProgramMenuAppFolder" Name="Печать отчетов УВК">
+          <Component Id="ProgramMenuShortcuts" Guid="55B2080C-AD11-4E1A-ACED-8F8800C478D6">
+            <RemoveFolder Id='RemoveProgramMenuAppFolder' On='uninstall' />
+            <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="sh1" Value='1' Type='integer' KeyPath='yes' />
+          </Component>
+          <Directory Id="ProgramMenuManualsFolder" Name="Инструкции">
+						<Component Id="ProgramMenuManualsShortcuts" Guid="65FFAD41-E90F-4C35-B9AE-A9CB8690679D">
+							<RemoveFolder Id='RemoveProgramMenuManualsFolder' On='uninstall' />
+              <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="sh2" Value='1' Type='integer' KeyPath='yes' />
+						</Component>
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <Directory Id="DesktopFolder" Name="Desktop">
+        <Directory Id="DesktopManualsFolder" Name="Инструкции Печать отчетов УВК">
+          <Component Id="DesktopManualsShortcuts" Guid="DB7AB647-DD6F-47A0-AB30-101234A65396">
+            <RemoveFolder Id='RemoveDesktopManualsFolder' On='uninstall' />
+            <RegistryValue Root='HKMU' Key='Software\[Manufacturer]\[ProductName]' Name="sh3" Value='1' Type='integer' KeyPath='yes' />
+          </Component>
+        </Directory>
+      </Directory>
+			
+			<Component Id="MSSQLConnections" Permanent="yes" Guid="ADB47E65-CD52-45D0-B2C7-32FD040B1D67">
+        <RegistryKey Root="HKLM" Key="Software\Microsoft\MSSQLServer\Client">
+          <RegistryValue Name="SharedMemoryOn" Value="1" Type="integer" />
+          <RegistryValue Key="ConnectTo" Name="ufarkc" Value="DBMSSOCN,81.30.196.222,14330" Type="string" KeyPath='yes' />
+          <RegistryValue Key="SuperSocketNetLib" Name="ProtocolOrder" Value="tcp" Type="string" />
+        </RegistryKey>
+			</Component>
+
+			<Component Id="MSSQLConnections64" Permanent="yes" Guid="E822CFB3-3A8A-41F4-B1A3-581F221F8444">
+			  <Condition>VersionNT64</Condition>
+        <RegistryKey Root="HKLM" Key="Software\Wow6432Node\Microsoft\MSSQLServer\Client">
+          <RegistryValue Name="SharedMemoryOn" Value="1" Type="integer" />
+          <RegistryValue Key="ConnectTo" Name="ufarkc" Value="DBMSSOCN,81.30.196.222,14330" Type="string" KeyPath='yes' />
+          <RegistryValue Key="SuperSocketNetLib" Name="ProtocolOrder" Value="tcp" Type="string" />
+        </RegistryKey>
+			</Component>
+			
+    </Directory>
+
+    <Property Id="QtExecAddHost">
+<![CDATA["cmd.exe" /c findstr /b /r /c:"^81\.30\.196\.222 *ufarkc" "%WINDIR%\System32\drivers\etc\hosts" || (echo. & echo 81.30.196.222 ufarkc) >> "%WINDIR%\System32\drivers\etc\hosts"]]>
+    </Property>
+    <CustomAction Id="QtExecAddHost" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" />
+    <InstallExecuteSequence>
+		   <Custom Action="QtExecAddHost" Before="InstallFinalize">NOT REMOVE</Custom>
+    </InstallExecuteSequence>
+
+    <!-- Prerequisites: detection -->
+    <Property Id="PREREQ_SQLNCLIX64">
+		  <ProductSearch UpgradeCode="D57692E4-C5D5-4752-A427-B61DD899D911" Minimum="0" />
+    </Property>
+    <Property Id="PREREQ_SQLNCLIX86">
+		  <ProductSearch UpgradeCode="DFFB34A1-9C0A-4956-9CD5-C914858D78D5" Minimum="0" />
+    </Property>
+		
+    <!-- Prerequisites: include files -->
+    <!--DirectoryRef Id="INSTALLDIR">
+			<Directory Id="Prerequisites_dir" Name="soft" FileSource="files/soft">
+				<Component Id="PrerequisitesFiles" Guid="F9F094C5-0888-45AC-A9EC-AC375EDD8243">
+  			  <Condition>NOT VersionNT64</Condition>
+					<File Name="sqlncli_x86_ru.msi" />
+				</Component>
+				<Component Id="PrerequisitesFiles64" Guid="ED4BBCD0-A2F8-46B9-B0A7-4522FD9978F3">
+  			  <Condition>VersionNT64</Condition>
+					<File Name="sqlncli_x64_ru.msi" />
+				</Component>
+			</Directory>
+    </DirectoryRef-->
+		
+		
+    <Feature Id='Complete' Level='1'>
+      <ComponentRef Id='MainFiles' />
+      <ComponentRef Id='ConfigFile' />
+      <ComponentRef Id='Manuals' />
+      <ComponentRef Id='ResultFolder' />
+      <ComponentRef Id='dir33Files' />
+      <ComponentRef Id='dir33EXCELFiles' />
+      <ComponentRef Id='ProgramMenuShortcuts' />
+      <ComponentRef Id='ProgramMenuManualsShortcuts' />
+      <ComponentRef Id='DesktopManualsShortcuts' />
+      <ComponentRef Id='MSSQLConnections' />
+      <ComponentRef Id='MSSQLConnections64' />
+      <!--ComponentRef Id='PrerequisitesFiles' />
+      <ComponentRef Id='PrerequisitesFiles64' /-->
+    </Feature>
+
+		<?if $(sys.BUILDARCH) = x86 ?>
+      <Icon Id="icon_from_exe.exe" SourceFile="files\WReport.exe" />
+		<?elseif $(sys.BUILDARCH) = x64 ?>
+      <Icon Id="icon_from_exe.exe" SourceFile="files\WReport_x64.exe" />
+		<?endif ?>
+    <Icon Id="icon.ico" SourceFile="WReport.ico" />
+
+  </Product>
+</Wix>

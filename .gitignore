@@ -2,6 +2,7 @@
 *.wixobj
 *.wixpdb
 *.exe
+/*/*.log
 /iconsext.exe
 /iconsext.cfg
 /wix311.exe
